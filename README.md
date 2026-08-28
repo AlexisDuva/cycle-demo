@@ -51,10 +51,10 @@ L'auto-deploy natif de Render est désactivé (`autoDeploy: false` dans
 
 Dans **Settings > Secrets and variables > Actions** :
 
-| Type     | Nom                  | Valeur |
-|----------|----------------------|--------|
-| Secret   | `RENDER_DEPLOY_HOOK` | URL du Deploy Hook (Render : service > Settings > Deploy Hook) |
-| Variable | `APP_URL`            | `https://cycle-demo.onrender.com` |
+| Type   | Nom                  | Valeur |
+|--------|----------------------|--------|
+| Secret | `RENDER_DEPLOY_HOOK` | URL du Deploy Hook (Render : service > Settings > Deploy Hook) |
+| Secret | `APP_URL`            | `https://cycle-demo.onrender.com` |
 
 ## Déploiement (Render)
 

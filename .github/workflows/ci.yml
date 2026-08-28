@@ -53,6 +53,6 @@ jobs:
       - name: Smoke test
         run: |
           body=$(curl --fail --silent --show-error --retry 5 --retry-delay 15 \
-            --retry-all-errors "${{ vars.APP_URL }}/")
+            --retry-all-errors "${{ secrets.APP_URL }}/")
           echo "Response: $body"
           test "$body" = "Hello World"
