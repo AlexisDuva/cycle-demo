@@ -9,6 +9,7 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing --cov-fail-under=100"
 testpaths = ["tests"]
+pythonpath = ["."]
 
 [tool.coverage.report]
 exclude_also = ["if __name__ == .__main__.:"]
