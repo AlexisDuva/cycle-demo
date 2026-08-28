@@ -8,7 +8,9 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     healthCheckPath: /
-    autoDeploy: true
+    # Le déploiement est piloté par GitHub Actions (via Deploy Hook) après
+    # succès des tests, et non par un push brut sur main.
+    autoDeploy: false
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.6"

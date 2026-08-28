@@ -1,0 +1,58 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Tests (pytest)
+        run: pytest
+
+  deploy:
+    # CD : ne déclenche le déploiement Render que si les tests passent,
+    # et uniquement sur push vers main (pas sur les pull requests).
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: false
+    steps:
+      - name: Trigger Render deploy
+        run: |
+          curl --fail --silent --show-error \
+            "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+      - name: Wait for service to come back
+        run: sleep 90
+
+      - name: Smoke test
+        run: |
+          body=$(curl --fail --silent --show-error --retry 5 --retry-delay 15 \
+            --retry-all-errors "${{ vars.APP_URL }}/")
+          echo "Response: $body"
+          test "$body" = "Hello World"
